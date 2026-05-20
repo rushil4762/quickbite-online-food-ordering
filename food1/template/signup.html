@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/material-design-iconic-font@2.2.0/dist/css/material-design-iconic-font.min.css">
+    <style>
+        :root {
+            --bg: radial-gradient(circle at top right, rgba(255, 178, 77, 0.24), transparent 30%), linear-gradient(135deg, #fff6ed 0%, #fffdf8 100%);
+            --card: #ffffff;
+            --primary: #e66a2f;
+            --primary-dark: #c24f1a;
+            --text: #6b594d;
+            --muted: #897f75;
+            --border: #ede5dd;
+            --danger: #c53b27;
+            --shadow: 0 24px 48px rgba(113, 54, 28, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "Poppins", sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            display: grid;
+            place-items: center;
+            padding: 24px;
+        }
+
+        .auth-shell {
+            width: min(980px, 100%);
+            display: grid;
+            grid-template-columns: 1.05fr 0.95fr;
+            background: var(--card);
+            border-radius: 28px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .auth-copy {
+            background: linear-gradient(155deg, rgba(230, 106, 47, 0.95), rgba(139, 92, 61, 0.92));
+            color: #fff;
+            padding: 56px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .auth-copy h1 {
+            font-size: clamp(2rem, 4vw, 3.2rem);
+            line-height: 1.05;
+            margin: 0 0 16px;
+        }
+
+        .auth-copy p {
+            margin: 0;
+            font-size: 1rem;
+            line-height: 1.7;
+            color: rgba(255, 255, 255, 0.86);
+        }
+
+        .auth-points {
+            display: grid;
+            gap: 14px;
+            margin-top: 36px;
+        }
+
+        .auth-points div {
+            padding: 14px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 16px;
+            backdrop-filter: blur(6px);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .auth-form-wrap {
+            padding: 42px;
+        }
+
+        .auth-form-wrap h2 {
+            margin: 0 0 8px;
+            font-size: 2rem;
+        }
+
+        .subtext {
+            color: var(--muted);
+            margin-bottom: 28px;
+        }
+
+        .status {
+            display: none;
+            margin-bottom: 18px;
+            padding: 12px 14px;
+            border-radius: 14px;
+            font-size: 0.95rem;
+        }
+
+        .status.show {
+            display: block;
+        }
+
+        .status.error {
+            background: #fff0ed;
+            color: var(--danger);
+            border: 1px solid #f5c2ba;
+        }
+
+        .status.success {
+            background: #fef5f0;
+            color: var(--primary-dark);
+            border: 1px solid #f5d5c8;
+        }
+
+        form {
+            display: grid;
+            gap: 16px;
+        }
+
+        .field-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .input-group {
+            display: grid;
+            gap: 8px;
+        }
+
+        label {
+            font-size: 0.92rem;
+            font-weight: 600;
+        }
+
+        input, select {
+            width: 100%;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 14px 16px;
+            font-size: 0.98rem;
+            outline: none;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            background: #fbfdf7;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(230, 106, 47, 0.12);
+        }
+
+        .delivery-fields {
+            display: none;
+            padding: 18px;
+            border-radius: 18px;
+            border: 1px dashed var(--border);
+            background: #fef9f5;
+            gap: 16px;
+        }
+
+        .delivery-fields.show {
+            display: grid;
+        }
+
+        .helper {
+            margin-top: -6px;
+            font-size: 0.84rem;
+            color: var(--muted);
+        }
+
+        button {
+            border: 0;
+            border-radius: 16px;
+            padding: 15px 18px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            color: #fff;
+            background: linear-gradient(135deg, #e66a2f, #f08844);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 14px 24px rgba(230, 106, 47, 0.2);
+        }
+
+        button:hover {
+            transform: translateY(-1px);
+        }
+
+        button:disabled {
+            opacity: 0.7;
+            cursor: wait;
+            transform: none;
+        }
+
+        .auth-link {
+            margin-top: 18px;
+            color: var(--muted);
+        }
+
+        .auth-link a {
+            color: var(--primary-dark);
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        @media (max-width: 840px) {
+            .auth-shell {
+                grid-template-columns: 1fr;
+            }
+
+            .auth-copy,
+            .auth-form-wrap {
+                padding: 28px;
+            }
+
+            .field-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section class="auth-shell">
+        <div class="auth-copy">
+            <div>
+                <h1>Join the fastest food delivery flow.</h1>
+                <p>Create a customer account to order instantly, or register as a delivery partner and wait for admin approval before going live.</p>
+            </div>
+            <div class="auth-points">
+                <div><strong>User signup:</strong> Quick access to browsing, cart, and checkout.</div>
+                <div><strong>Delivery signup:</strong> Adds vehicle and phone details for verification.</div>
+                <div><strong>Secure backend:</strong> Role is controlled server-side and admin cannot be chosen here.</div>
+            </div>
+        </div>
+
+        <div class="auth-form-wrap">
+            <h2>Create account</h2>
+            <p class="subtext">Fill in your details and we’ll send the right role data to the backend.</p>
+
+            <div id="statusBox" class="status" aria-live="polite"></div>
+
+            <form id="signupForm" novalidate>
+                {% csrf_token %}
+                <div class="field-row">
+                    <div class="input-group">
+                        <label for="name">Full name</label>
+                        <input type="text" id="name" name="name" placeholder="Aarav Sharma" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="role">Register as</label>
+                        <select id="role" name="role" required>
+                            <option value="user">User</option>
+                            <option value="delivery">Delivery Partner</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="field-row">
+                    <div class="input-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" placeholder="name@example.com" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="contact_number">Contact number</label>
+                        <input type="tel" id="contact_number" name="contact_number" placeholder="10-digit number" maxlength="10" required>
+                    </div>
+                </div>
+
+                <div class="delivery-fields" id="deliveryFields">
+                    <div class="field-row">
+                        <div class="input-group">
+                            <label for="vehicle_type">Vehicle type</label>
+                            <select id="vehicle_type" name="vehicle_type">
+                                <option value="">Select vehicle</option>
+                                <option value="bike">Bike</option>
+                                <option value="scooter">Scooter</option>
+                                <option value="car">Car</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label for="phone">Delivery phone</label>
+                            <input type="tel" id="phone" name="phone" placeholder="10-digit number" maxlength="10">
+                        </div>
+                    </div>
+                    <p class="helper">Delivery accounts are created as pending and need admin approval before login.</p>
+                </div>
+
+                <div class="field-row">
+                    <div class="input-group">
+                        <label for="password1">Password</label>
+                        <input type="password" id="password1" name="password1" placeholder="At least 8 characters" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="password2">Confirm password</label>
+                        <input type="password" id="password2" name="password2" placeholder="Repeat password" required>
+                    </div>
+                </div>
+
+                <button type="submit" id="submitBtn">Sign up</button>
+            </form>
+
+            <p class="auth-link">Already registered? <a href="{% url 'login' %}">Log in here</a></p>
+        </div>
+    </section>
+
+    <script>
+        const form = document.getElementById('signupForm');
+        const roleField = document.getElementById('role');
+        const deliveryFields = document.getElementById('deliveryFields');
+        const vehicleField = document.getElementById('vehicle_type');
+        const phoneField = document.getElementById('phone');
+        const statusBox = document.getElementById('statusBox');
+        const submitBtn = document.getElementById('submitBtn');
+
+        function showStatus(message, type) {
+            statusBox.textContent = message;
+            statusBox.className = `status show ${type}`;
+        }
+
+        function toggleDeliveryFields() {
+            const isDelivery = roleField.value === 'delivery';
+            deliveryFields.classList.toggle('show', isDelivery);
+            vehicleField.required = isDelivery;
+            phoneField.required = isDelivery;
+            if (!isDelivery) {
+                vehicleField.value = '';
+                phoneField.value = '';
+            }
+        }
+
+        function validateForm(data) {
+            const namePattern = /^[A-Za-z\s]+$/;
+            const phonePattern = /^\d{10}$/;
+            const strongPassword = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
+
+            if (!namePattern.test(data.name.trim())) {
+                return 'Name must contain only letters and spaces.';
+            }
+            if (!phonePattern.test(data.contact_number.trim())) {
+                return 'Contact number must be exactly 10 digits.';
+            }
+            if (!strongPassword.test(data.password1)) {
+                return 'Password must be at least 8 characters and include a letter, a number, and a special character.';
+            }
+            if (data.password1 !== data.password2) {
+                return 'Passwords do not match.';
+            }
+            if (data.role === 'delivery') {
+                if (!data.vehicle_type) {
+                    return 'Please select a vehicle type.';
+                }
+                if (!phonePattern.test(data.phone.trim())) {
+                    return 'Delivery phone must be exactly 10 digits.';
+                }
+            }
+            return '';
+        }
+
+        roleField.addEventListener('change', toggleDeliveryFields);
+        toggleDeliveryFields();
+
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const formData = new FormData(form);
+            const payload = Object.fromEntries(formData.entries());
+            const validationError = validateForm(payload);
+
+            if (validationError) {
+                showStatus(validationError, 'error');
+                return;
+            }
+
+            submitBtn.disabled = true;
+            showStatus('Creating your account...', 'success');
+
+            try {
+                const csrfToken = form.querySelector('input[name="csrfmiddlewaretoken"]').value;
+                const requestBody = new URLSearchParams();
+                Object.entries(payload).forEach(([key, value]) => {
+                    requestBody.append(key, value ?? '');
+                });
+
+                const response = await fetch("/api/auth/signup/", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                        'X-CSRFToken': csrfToken,
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    credentials: 'same-origin',
+                    body: requestBody.toString()
+                });
+
+                const rawText = await response.text();
+                let result;
+
+                try {
+                    result = JSON.parse(rawText);
+                } catch (parseError) {
+                    result = {
+                        success: false,
+                        message: rawText.includes('CSRF')
+                            ? 'CSRF validation failed. Refresh the page and try again.'
+                            : `Signup request failed with status ${response.status}.`
+                    };
+                }
+
+                showStatus(result.message || 'Signup request failed.', response.ok && result.success ? 'success' : 'error');
+
+                if (response.ok && result.success) {
+                    form.reset();
+                    toggleDeliveryFields();
+                    setTimeout(() => {
+                        window.location.href = "{% url 'login' %}";
+                    }, 1400);
+                }
+            } catch (error) {
+                console.error('Signup fetch error:', error);
+                showStatus('Unable to connect to the signup service right now.', 'error');
+            } finally {
+                submitBtn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

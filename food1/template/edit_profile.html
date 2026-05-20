@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-------eye icon----->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/material-design-iconic-font@2.2.0/dist/css/material-design-iconic-font.min.css"> 
+
+<style>
+  .password-field {
+  position: relative;
+  margin-bottom: 15px;
+}
+
+.password-field input {
+  width: 100%;
+  padding-right: 40px; /* Space for eye icon */
+}
+
+.password-field .toggle-password {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 18px;
+  color: #666;
+}
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+    display: none;
+}
+.password-field .toggle-password {
+  position: absolute;
+  right: 12px; 
+  top: 70%;
+  transform: translateY(-50%); 
+  cursor: pointer;
+  font-size: 22px; 
+  color: #444; 
+}
+
+.password-field input {
+  width: 100%;
+  padding-right: 45px; 
+}
+
+</style>
+
+<div class="container-fluid page-header mb-5 wow fadeIn" data-wow-delay="0.1s">
+      <div class="container">
+            <!-- <h1 class="display-3 mb-3 animated slideInDown">Update Profile</h1> -->
+      </div>
+</div>
+
+<!-- Form Section -->
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow-lg border-0 rounded-3">
+        <div class="card-body p-4">
+          <h3 class="text-center mb-4">Update Your Details</h3>
+          <form method="POST" action="{% url 'edit_profile' %}">
+            {% csrf_token %}
+
+            <div class="mb-3">
+              <label for="name" class="form-label">Name</label>
+              <input type="text" name="name" class="form-control" value="{{ name }}" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="contact_number" class="form-label">Contact Number</label>
+              <input type="text" name="contact_number" class="form-control" 
+                     value="{{ contact_number }}" pattern="[0-9]{10}" required>
+            </div>
+
+            
+            
+            <div class="password-field">
+              <label for="current_password">Current Password</label>
+              <input type="password" name="current_password" id="current_password"
+                    class="form-control"
+                    placeholder="Current Password"
+                    value="{{ request.POST.current_password|default:'' }}">
+              <span class="toggle-password" onclick="togglePassword('current_password', this)">
+                <i class="zmdi zmdi-eye"></i>
+              </span>
+            </div>
+
+            <div class="password-field">
+              <label for="new_password">New Password</label>
+              <input type="password" name="new_password" id="new_password"
+                    class="form-control"
+                    placeholder="New Password"
+                    value="{{ request.POST.new_password|default:'' }}">
+              <span class="toggle-password" onclick="togglePassword('new_password', this)">
+                <i class="zmdi zmdi-eye"></i>
+              </span>
+            </div>
+
+            <div class="password-field">
+              <label for="confirm_password">Confirm Password</label>
+              <input type="password" name="confirm_password" id="confirm_password"
+                    class="form-control"
+                    placeholder="Confirm Password"
+                    value="{{ request.POST.confirm_password|default:'' }}">
+              <span class="toggle-password" onclick="togglePassword('confirm_password', this)">
+                <i class="zmdi zmdi-eye"></i>
+              </span>
+            </div>
+
+
+
+            <button type="submit" class="btn btn-success w-100">Update Profile</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+function togglePassword(fieldId, iconElement) {
+    const field = document.getElementById(fieldId);
+    const icon = iconElement.querySelector("i");
+
+    if (field.type === "password") {
+        field.type = "text";
+        icon.classList.remove("zmdi-eye");
+        icon.classList.add("zmdi-eye-off");
+    } else {
+        field.type = "password";
+        icon.classList.remove("zmdi-eye-off");
+        icon.classList.add("zmdi-eye");
+    }
+}
+</script>
+{% if messages %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    {% for message in messages %}
+        Swal.fire({
+            icon: "{{ message.tags }}",   // success | error | warning | info
+            title: "{{ message|escapejs }}",
+            showConfirmButton: true,
+            confirmButtonText: "OK"
+        });
+    {% endfor %}
+});
+</script>
+{% endif %}
+
+
+
+
+
+
+{% endblock %}

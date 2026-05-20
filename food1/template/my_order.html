@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% load custom_tags %}
+{% block content %}
+<div class="container-fluid page-header mb-5 wow fadeIn" data-wow-delay="0.1s">
+        <div class="container">
+            <h1 class="display-3 mb-3 animated slideInDown">My Orders</h1>
+            <nav aria-label="breadcrumb animated slideInDown">
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a class="text-body" href="index.html">Home</a></li>
+                    
+                    <li class="breadcrumb-item text-dark active" aria-current="page">My Orders</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+   
+
+<div class="container mt-5">
+    <h2 class="mb-4">My Orders</h2>
+
+    {% if orders %}
+        {% for order in orders %}
+            <div class="card mb-4 p-3 shadow">
+                <!-- <h5>Order #{{ order.id }}</h5> -->
+                <p><strong>Order Date:</strong> {{ order.order_date }}</p>
+                <p><strong>Order Status:</strong> {{ order.status }}</p>
+                <p><strong>Delivery Partner:</strong>
+                    {% if order.assigned_delivery_partner %}
+                        {{ order.assigned_delivery_partner.profile.name }} ({{ order.assigned_delivery_partner.phone }})
+                    {% else %}
+                        Not assigned yet
+                    {% endif %}
+                </p>
+                <p><strong>Delivery Location:</strong> {{ order.flat }}, {{ order.street }}, {{ order.city }} - {{ order.pincode }}</p>
+                
+                <p><strong>Payment Method:</strong> {{ order.payment_method }}</p>
+                
+
+                <h6 class="mt-3">Items:</h6>
+                <table class="table table-bordered">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Product</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Qty</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in order.items.all %}
+                        <tr>
+                            <td>{{ item.product_name }}</td>
+                            <td>{{ item.category }}</td>
+                            <td>₹{{ item.price }} / {{ item.unit }}</td>
+                            <td>{{ item.quantity|format_quantity }} {{ item.unit }}</td>
+                            <td>₹{{ item.total_price }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                <div class="text-end">
+                    <h5><strong>Grand Total:</strong> ₹{{ order.total_amount }}</h5>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No orders found.</p>
+    {% endif %}
+</div>
+
+
+
+{% endblock %}

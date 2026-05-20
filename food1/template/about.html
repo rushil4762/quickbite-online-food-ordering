@@ -1,0 +1,400 @@
+{% extends "base.html" %}
+{% block head %}
+<style>
+    .about-shell {
+        width: min(1180px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 34px 0 20px;
+    }
+
+    .about-banner,
+    .about-story,
+    .timeline-card,
+    .belief-card,
+    .about-cta {
+        border-radius: 30px;
+        border: 1px solid rgba(74, 40, 21, 0.08);
+        box-shadow: 0 24px 48px rgba(113, 54, 28, 0.1);
+    }
+
+    .about-banner {
+        padding: 38px 40px;
+        background:
+            radial-gradient(circle at top right, rgba(255, 178, 77, 0.22), transparent 26%),
+            linear-gradient(135deg, #fff8f1 0%, #fffdf8 100%);
+    }
+
+    .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 16px;
+        border-radius: 999px;
+        background: rgba(230, 90, 47, 0.08);
+        color: #a34522;
+        font-weight: 800;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        font-size: 0.78rem;
+    }
+
+    .about-banner h1,
+    .section-heading h2,
+    .about-cta h2 {
+        margin: 0;
+        font-family: "Fraunces", serif;
+        line-height: 1.02;
+        letter-spacing: -0.03em;
+    }
+
+    .about-banner-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
+        gap: 24px;
+        flex-wrap: wrap;
+    }
+
+    .about-banner h1 {
+        margin-top: 16px;
+        font-size: clamp(2.5rem, 4.5vw, 4.6rem);
+        max-width: 11ch;
+    }
+
+    .about-lead {
+        max-width: 55ch;
+        color: #6d584b;
+        line-height: 1.85;
+        font-size: 1.04rem;
+    }
+
+    .about-stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+        margin-top: 28px;
+    }
+
+    .stat-box {
+        padding: 20px;
+        border-radius: 22px;
+        background: rgba(255, 255, 255, 0.82);
+        border: 1px solid rgba(74, 40, 21, 0.08);
+    }
+
+    .stat-box strong {
+        display: block;
+        font-size: 1.6rem;
+        color: #24160f;
+    }
+
+    .stat-box span {
+        display: block;
+        margin-top: 8px;
+        color: #7a6557;
+        line-height: 1.6;
+    }
+
+    .section {
+        padding: 34px 0;
+    }
+
+    .section-heading {
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
+        gap: 18px;
+        margin-bottom: 22px;
+        flex-wrap: wrap;
+    }
+
+    .section-heading h2 {
+        font-size: clamp(2rem, 4vw, 3rem);
+    }
+
+    .section-heading p {
+        max-width: 58ch;
+        margin: 0;
+        color: #6d584b;
+    }
+
+    .about-story {
+        overflow: hidden;
+        display: grid;
+        grid-template-columns: 0.95fr 1.05fr;
+        background: rgba(255, 253, 248, 0.92);
+    }
+
+    .story-media {
+        min-height: 440px;
+        background:
+            linear-gradient(180deg, rgba(36, 22, 15, 0.12), rgba(36, 22, 15, 0.34)),
+            url("/static/img/about.jpg") center/cover no-repeat;
+    }
+
+    .story-copy {
+        padding: 34px;
+    }
+
+    .story-copy h3,
+    .timeline-card h3,
+    .belief-card h3 {
+        margin: 0 0 12px;
+        font-size: 1.38rem;
+    }
+
+    .story-copy p,
+    .timeline-points li,
+    .belief-card p {
+        color: #6d584b;
+        line-height: 1.8;
+    }
+
+    .timeline-points {
+        list-style: none;
+        padding: 0;
+        margin: 20px 0 0;
+        display: grid;
+        gap: 14px;
+    }
+
+    .timeline-points li {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+    }
+
+    .timeline-points i {
+        color: #e65a2f;
+        margin-top: 6px;
+    }
+
+    .timeline-grid,
+    .belief-grid {
+        display: grid;
+        gap: 22px;
+    }
+
+    .timeline-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .belief-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .timeline-card,
+    .belief-card {
+        padding: 26px;
+        background: rgba(255, 253, 248, 0.92);
+    }
+
+    .timeline-card small {
+        display: inline-block;
+        margin-bottom: 12px;
+        color: #c24a1f;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    .belief-icon {
+        width: 54px;
+        height: 54px;
+        border-radius: 18px;
+        display: grid;
+        place-items: center;
+        margin-bottom: 18px;
+        font-size: 1.2rem;
+        color: #fff;
+        background: linear-gradient(135deg, #e65a2f, #ff9a54);
+    }
+
+    .about-cta {
+        padding: 36px;
+        color: #fff;
+        background:
+            radial-gradient(circle at top right, rgba(255, 178, 77, 0.3), transparent 22%),
+            linear-gradient(135deg, #30170f 0%, #6f2b18 58%, #d65427 100%);
+    }
+
+    .about-cta h2 {
+        margin-bottom: 12px;
+        color: #fff;
+        font-size: clamp(2rem, 4vw, 3rem);
+    }
+
+    .about-cta p {
+        max-width: 60ch;
+        margin: 0;
+        color: rgba(255, 245, 237, 0.82);
+    }
+
+    .cta-actions {
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+        margin-top: 24px;
+    }
+
+    .cta-actions .ghost-btn {
+        background: rgba(255, 255, 255, 0.12);
+        color: #fff;
+        border-color: rgba(255, 255, 255, 0.22);
+    }
+
+    .about-banner:hover,
+    .about-story:hover,
+    .timeline-card:hover,
+    .belief-card:hover {
+        transform: translateY(-5px);
+        transition: transform 0.28s ease, box-shadow 0.28s ease;
+        box-shadow: 0 30px 56px rgba(113, 54, 28, 0.16);
+    }
+
+    @media (max-width: 992px) {
+        .about-stats,
+        .timeline-grid,
+        .belief-grid,
+        .about-story {
+            grid-template-columns: 1fr;
+        }
+
+        .about-banner {
+            padding: 30px 24px;
+        }
+
+        .story-media {
+            min-height: 300px;
+        }
+    }
+</style>
+{% endblock %}
+{% block content %}
+<section class="about-shell">
+    <div class="about-banner">
+        <div class="about-banner-top">
+            <div>
+                <span class="eyebrow"><i class="fas fa-info-circle"></i> About FoodZone</span>
+                <h1>The story behind our food ordering brand.</h1>
+            </div>
+            <p class="about-lead">FoodZone Kitchen is built around one clear idea: ordering food online should feel warm, quick, and trustworthy. This page explains who we are, what changed in the brand, and why the experience now feels closer to a modern delivery platform.</p>
+        </div>
+
+        <div class="about-stats">
+            <div class="stat-box">
+                <strong>Fast</strong>
+                <span>Built around quick browsing, quick checkout, and quick delivery expectations.</span>
+            </div>
+            <div class="stat-box">
+                <strong>Curated</strong>
+                <span>Menus are grouped to feel like real cravings, not just a generic item catalog.</span>
+            </div>
+            <div class="stat-box">
+                <strong>Comfort</strong>
+                <span>The experience is designed for everyday meals, indulgent orders, and repeat convenience.</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="about-shell">
+        <div class="section-heading">
+            <div>
+                <span class="eyebrow">Brand story</span>
+                <h2>How FoodZone evolved</h2>
+            </div>
+            <p>This is the core about section, so the layout is more editorial and explanatory than the homepage while still using the same visual style.</p>
+        </div>
+
+        <div class="about-story">
+            <div class="story-media"></div>
+            <div class="story-copy">
+                <h3>From generic food listing to a more modern ordering identity</h3>
+                <p>The earlier experience looked more like a general product site. We reshaped FoodZone Kitchen to feel more like a real restaurant and delivery brand, with stronger food presentation, cleaner discovery, and messaging that fits how people actually order online.</p>
+                <p>The goal is not only to show dishes, but to help customers feel confident moving from menu browsing to cart and checkout without friction.</p>
+                <ul class="timeline-points">
+                    <li><i class="fas fa-check-circle"></i><span>Menus now feel easier to scan and closer to restaurant-style ordering behavior.</span></li>
+                    <li><i class="fas fa-check-circle"></i><span>Category structure supports fast food, desserts, beverages, Punjabi Delights, and South Indian meals.</span></li>
+                    <li><i class="fas fa-check-circle"></i><span>The brand voice now centers cravings, comfort, speed, and repeat usability.</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="about-shell">
+        <div class="section-heading">
+            <div>
+                <span class="eyebrow">Journey</span>
+                <h2>What defines the experience</h2>
+            </div>
+            <p>Instead of repeating homepage-style promo blocks, this section explains the product journey and the thinking behind the interface.</p>
+        </div>
+
+        <div class="timeline-grid">
+            <div class="timeline-card">
+                <small>01</small>
+                <h3>Discover faster</h3>
+                <p>Users should understand the menu quickly, jump to their preferred category, and spot what they want without digging through clutter.</p>
+            </div>
+            <div class="timeline-card">
+                <small>02</small>
+                <h3>Order with confidence</h3>
+                <p>Clear pricing, simpler actions, and a warmer food-first tone help the interface feel more reliable from first click to checkout.</p>
+            </div>
+            <div class="timeline-card">
+                <small>03</small>
+                <h3>Come back easily</h3>
+                <p>The experience is designed around repeat behavior, where customers reorder favorites and explore new options without friction.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="about-shell">
+        <div class="section-heading">
+            <div>
+                <span class="eyebrow">Beliefs</span>
+                <h2>What we care about</h2>
+            </div>
+            <p>These pillars make the page feel like an About section, not another marketing homepage.</p>
+        </div>
+
+        <div class="belief-grid">
+            <div class="belief-card">
+                <div class="belief-icon"><i class="fas fa-utensils"></i></div>
+                <h3>Food-first design</h3>
+                <p>The visual system is built around appetite, ease, and relevance rather than broad brochure-style messaging.</p>
+            </div>
+            <div class="belief-card">
+                <div class="belief-icon"><i class="fas fa-motorcycle"></i></div>
+                <h3>Delivery-minded flow</h3>
+                <p>Every major screen is shaped to support ordering, checkout, tracking, and repeat convenience.</p>
+            </div>
+            <div class="belief-card">
+                <div class="belief-icon"><i class="fas fa-heart"></i></div>
+                <h3>Comfort and trust</h3>
+                <p>Customers should feel that ordering here is simple, familiar, and worth returning to for everyday cravings.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="about-shell">
+        <div class="about-cta">
+            <span class="eyebrow" style="background: rgba(255,255,255,0.14); color: #fff;">Try it now</span>
+            <h2>See the story in the menu itself.</h2>
+            <p>Browse the dishes, explore the categories, and experience the side of FoodZone that matters most: quick food discovery, easy ordering, and a cleaner delivery journey.</p>
+            <div class="cta-actions">
+                <a href="{% url 'product' %}" class="cta-btn">Explore Menu</a>
+                <a href="{% url 'contact' %}" class="ghost-btn">Contact Us</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

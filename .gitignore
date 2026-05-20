@@ -1,0 +1,73 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environment
+venv/
+.env/
+.venv/
+
+# Django
+*.log
+db.sqlite3
+media/
+staticfiles/
+
+# Environment Variables
+.env
+
+# VS Code
+.vscode/
+
+# PyCharm
+.idea/
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# Python build files
+build/
+dist/
+*.egg-info/
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# Coverage reports
+htmlcov/
+.coverage
+coverage.xml
+
+# Migrations cache
+*.pyc
+
+# SQLite
+*.sqlite3
+
+# Node modules (if frontend packages used)
+node_modules/
+
+# Temporary files
+*.swp
+*.swo
+
+# SSL Certificates
+*.crt
+*.key
+
+# SQLite Database
+db.sqlite3
+
+# Python cache
+__pycache__/
+
+# Virtual env
+venv/
+.venv/
+
+# Environment
+.env

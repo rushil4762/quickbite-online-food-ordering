@@ -1,0 +1,259 @@
+{% extends "base.html" %}
+{% load custom_tags %}
+{% block head %}
+<style>
+    .cart-shell {
+        width: min(1180px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 30px 0 40px;
+    }
+
+    .cart-head {
+        margin-bottom: 20px;
+    }
+
+    .message-list {
+        display: grid;
+        gap: 10px;
+        margin: 0 0 18px;
+    }
+
+    .message-item {
+        padding: 12px 14px;
+        border-radius: 16px;
+        font-weight: 700;
+        background: #fff4ea;
+        color: #a34522;
+        border: 1px solid rgba(230, 90, 47, 0.16);
+    }
+
+    .cart-head h1 {
+        font-family: "Fraunces", serif;
+        font-size: clamp(2.2rem, 4vw, 3.4rem);
+        margin-bottom: 10px;
+    }
+
+    .cart-grid {
+        display: grid;
+        grid-template-columns: 1.3fr 0.75fr;
+        gap: 24px;
+    }
+
+    .cart-panel,
+    .summary-panel,
+    .cart-item {
+        border-radius: 28px;
+        background: rgba(255, 253, 248, 0.92);
+        border: 1px solid rgba(74, 40, 21, 0.08);
+        box-shadow: 0 22px 48px rgba(113, 54, 28, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    }
+
+    .cart-panel,
+    .summary-panel {
+        padding: 24px;
+    }
+
+    .cart-list {
+        display: grid;
+        gap: 18px;
+    }
+
+    .cart-item {
+        padding: 16px;
+        display: grid;
+        grid-template-columns: 100px 1fr;
+        gap: 16px;
+        align-items: center;
+    }
+
+    .cart-item img {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 20px;
+        transition: transform 0.35s ease;
+    }
+
+    .cart-item h5 {
+        margin: 0 0 6px;
+    }
+
+    .muted {
+        color: #6c5a4d;
+    }
+
+    .item-actions {
+        display: flex;
+        justify-content: space-between;
+        gap: 14px;
+        align-items: center;
+        flex-wrap: wrap;
+        margin-top: 14px;
+    }
+
+    .qty-form {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .qty-form input {
+        width: 82px;
+        padding: 10px 12px;
+        border-radius: 12px;
+        border: 1px solid rgba(74, 40, 21, 0.12);
+    }
+
+    .unit-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: #fff2e2;
+        color: #6f5a4b;
+        font-size: 0.8rem;
+        font-weight: 800;
+    }
+
+    .link-btn {
+        padding: 11px 14px;
+        border-radius: 14px;
+        font-weight: 800;
+        border: 1px solid rgba(74, 40, 21, 0.12);
+        background: #fff;
+        color: #24160f;
+        transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+    }
+
+    .summary-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 14px 0;
+        border-bottom: 1px solid rgba(74, 40, 21, 0.08);
+    }
+
+    .summary-row.total {
+        font-size: 1.1rem;
+        font-weight: 800;
+        border-bottom: 0;
+    }
+
+    .empty-card {
+        text-align: center;
+        padding: 52px 28px;
+        border-radius: 28px;
+        background: rgba(255, 253, 248, 0.92);
+        border: 1px solid rgba(74, 40, 21, 0.08);
+    }
+
+    .cart-panel:hover,
+    .summary-panel:hover,
+    .cart-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 28px 52px rgba(113, 54, 28, 0.14);
+        border-color: rgba(230, 90, 47, 0.14);
+    }
+
+    .cart-item:hover img {
+        transform: scale(1.05);
+    }
+
+    .link-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 14px 24px rgba(113, 54, 28, 0.1);
+        background: #fff6ed;
+    }
+
+    @media (max-width: 900px) {
+        .cart-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 580px) {
+        .cart-item {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+{% block content %}
+<section class="cart-shell">
+    <div class="cart-head">
+        <h1>Your order bag</h1>
+        <p class="muted mb-0">A cleaner cart layout with stronger hierarchy, bigger images and a proper order summary card.</p>
+    </div>
+
+    {% if messages %}
+        <div class="message-list">
+            {% for message in messages %}
+                <div class="message-item">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% if cart_items %}
+        <div class="cart-grid">
+            <div class="cart-panel">
+                <h3 class="mb-4">Selected dishes</h3>
+                <div class="cart-list">
+                    {% for item in cart_items %}
+                        <div class="cart-item">
+                            <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
+                            <div>
+                                <h5>{{ item.product_name }}</h5>
+                                <div class="muted">{{ item.category }}</div>
+                                <div class="muted mt-2">₹{{ item.price_at_time }} / {{ item.unit }}</div>
+
+                                <div class="item-actions">
+                                    <form method="POST" action="{% url 'update_cart' item.id %}" class="qty-form">
+                                        {% csrf_token %}
+                                        {% if item.unit == "kg" %}
+                                            <input type="number" name="quantity" value="{{ item.quantity|format_quantity }}" step="0.1" min="{{ item.product.min_quantity|format_quantity }}">
+                                        {% else %}
+                                            <input type="number" name="quantity" value="{{ item.quantity|format_quantity }}" step="1" min="1">
+                                        {% endif %}
+                                        <span class="unit-badge">{{ item.unit }}</span>
+                                        <button type="submit" class="cta-btn">Update</button>
+                                    </form>
+                                    <div>
+                                        <strong>₹{{ item.total_price }}</strong>
+                                        <a href="{% url 'remove_from_cart' item.id %}" class="link-btn ms-2">Remove</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <aside class="summary-panel">
+                <h3 class="mb-4">Order summary</h3>
+                <div class="summary-row">
+                    <span>Subtotal</span>
+                    <strong>₹{{ total_price }}</strong>
+                </div>
+                <div class="summary-row">
+                    <span>Delivery</span>
+                    <strong>₹50</strong>
+                </div>
+                <div class="summary-row total">
+                    <span>Total</span>
+                    <strong>₹{{ grand_total }}</strong>
+                </div>
+                <p class="muted mt-3">Packed fast and handed to the assigned delivery partner after checkout.</p>
+                <a href="{% url 'checkout' %}" class="cta-btn d-inline-block w-100 text-center mt-2">Proceed to Checkout</a>
+            </aside>
+        </div>
+    {% else %}
+        <div class="empty-card">
+            <h3>Your cart is still empty</h3>
+            <p class="muted">Open the menu and add a few dishes to feel the new ordering flow.</p>
+            <a href="{% url 'product' %}" class="cta-btn">Continue Shopping</a>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}

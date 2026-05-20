@@ -1,0 +1,629 @@
+{% extends "base.html" %}
+{% block head %}
+<style>
+    .hero-wrap,
+    .section-wrap {
+        width: min(1180px, calc(100% - 32px));
+        margin: 0 auto;
+    }
+
+    .hero {
+        padding: 42px 0 24px;
+    }
+
+    .hero-shell {
+        display: grid;
+        grid-template-columns: 1.15fr 0.85fr;
+        gap: 28px;
+        align-items: stretch;
+    }
+
+    .hero-copy,
+    .hero-visual,
+    .section-card,
+    .review-card {
+        background: rgba(255, 253, 248, 0.88);
+        border: 1px solid rgba(74, 40, 21, 0.08);
+        border-radius: 30px;
+        box-shadow: 0 24px 48px rgba(113, 54, 28, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    }
+
+    .hero-copy {
+        padding: 54px;
+        background:
+            radial-gradient(circle at top right, rgba(255, 178, 77, 0.24), transparent 30%),
+            linear-gradient(135deg, #fff6ed 0%, #fffdf8 100%);
+    }
+
+    .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 16px;
+        border-radius: 999px;
+        background: rgba(230, 90, 47, 0.08);
+        color: #a34522;
+        font-weight: 800;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        font-size: 0.78rem;
+    }
+
+    .hero h1,
+    .section-heading h2 {
+        font-family: "Fraunces", serif;
+        line-height: 1.02;
+        letter-spacing: -0.03em;
+    }
+
+    .hero h1 {
+        font-size: clamp(2.9rem, 6vw, 5.4rem);
+        margin: 20px 0 18px;
+        max-width: 12ch;
+    }
+
+    .hero-copy p {
+        color: #6b594d;
+        font-size: 1.05rem;
+        line-height: 1.8;
+        max-width: 58ch;
+    }
+
+    .hero-actions {
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+        margin-top: 28px;
+    }
+
+    .hero-stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+        margin-top: 28px;
+    }
+
+    .stat-chip {
+        padding: 18px;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.82);
+        border: 1px solid rgba(74, 40, 21, 0.08);
+    }
+
+    .stat-chip strong {
+        display: block;
+        font-size: 1.4rem;
+    }
+
+    .hero-visual {
+        position: relative;
+        overflow: hidden;
+        min-height: 560px;
+        background:
+            linear-gradient(180deg, rgba(36, 22, 15, 0.18), rgba(36, 22, 15, 0.52)),
+            url("/static/img/cocacola.jpg") center/cover no-repeat;
+    }
+
+    .visual-card {
+        position: absolute;
+        left: 26px;
+        right: 26px;
+        bottom: 24px;
+        padding: 22px;
+        border-radius: 24px;
+        color: #fff;
+        background: rgba(25, 12, 7, 0.58);
+        backdrop-filter: blur(10px);
+    }
+
+    .visual-badges {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 14px;
+    }
+
+    .visual-badges span {
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.14);
+        font-size: 0.86rem;
+    }
+
+    .section {
+        padding: 34px 0;
+    }
+
+    .section-heading {
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
+        gap: 18px;
+        margin-bottom: 22px;
+        flex-wrap: wrap;
+    }
+
+    .section-heading p {
+        max-width: 56ch;
+        color: #6b594d;
+        margin: 0;
+    }
+
+    .section-heading h2 {
+        font-size: clamp(2rem, 4vw, 3.2rem);
+        margin: 0;
+    }
+
+    .category-grid,
+    .feature-grid,
+    .offer-grid,
+    .review-grid,
+    .recommend-grid {
+        display: grid;
+        gap: 22px;
+    }
+
+    .category-grid,
+    .feature-grid,
+    .offer-grid,
+    .recommend-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .review-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .section-card {
+        overflow: hidden;
+    }
+
+    .category-card img,
+    .offer-card img {
+        width: 100%;
+        height: 230px;
+        object-fit: cover;
+        transition: transform 0.4s ease;
+    }
+
+    .category-card .body,
+    .offer-card .body,
+    .feature-card,
+    .review-card {
+        padding: 24px;
+    }
+
+    .category-card h3,
+    .offer-card h3 {
+        margin: 0 0 10px;
+        font-size: 1.35rem;
+    }
+
+    .category-card p,
+    .offer-card p,
+    .feature-card p,
+    .review-card p {
+        color: #6b594d;
+        line-height: 1.75;
+        margin-bottom: 0;
+    }
+
+    .feature-card {
+        background: linear-gradient(180deg, #fffdf8 0%, #fff2e2 100%);
+    }
+
+    .feature-card .icon {
+        width: 54px;
+        height: 54px;
+        border-radius: 18px;
+        display: grid;
+        place-items: center;
+        margin-bottom: 18px;
+        font-size: 1.25rem;
+        color: #fff;
+        background: linear-gradient(135deg, #e65a2f, #ff9a54);
+    }
+
+    .offer-card {
+        position: relative;
+    }
+
+    .offer-badge {
+        position: absolute;
+        top: 18px;
+        left: 18px;
+        padding: 10px 14px;
+        border-radius: 999px;
+        background: #24160f;
+        color: #fff;
+        font-size: 0.8rem;
+        font-weight: 800;
+    }
+
+    .cta-banner {
+        padding: 34px;
+        border-radius: 28px;
+        color: #fff;
+        background:
+            radial-gradient(circle at top right, rgba(255, 178, 77, 0.34), transparent 22%),
+            linear-gradient(135deg, #3a1d14 0%, #7f2f1b 56%, #cf4e26 100%);
+        box-shadow: 0 26px 50px rgba(86, 35, 17, 0.22);
+    }
+
+    .cta-banner p {
+        color: rgba(255, 245, 237, 0.82);
+    }
+
+    .review-card {
+        background: #fffaf3;
+    }
+
+    .recommend-card {
+        display: block;
+        overflow: hidden;
+    }
+
+    .recommend-card img {
+        width: 100%;
+        height: 220px;
+        object-fit: cover;
+        transition: transform 0.4s ease;
+    }
+
+    .recommend-card .body {
+        padding: 24px;
+    }
+
+    .recommend-meta {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        align-items: center;
+        margin-top: 16px;
+    }
+
+    .recommend-meta strong {
+        font-size: 1.35rem;
+    }
+
+    .section-card:hover,
+    .review-card:hover,
+    .hero-copy:hover,
+    .hero-visual:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 30px 56px rgba(113, 54, 28, 0.16);
+        border-color: rgba(230, 90, 47, 0.14);
+    }
+
+    .category-card:hover img,
+    .offer-card:hover img,
+    .recommend-card:hover img {
+        transform: scale(1.05);
+    }
+
+    .category-card:hover h3,
+    .offer-card:hover h3 {
+        color: #c2481f;
+    }
+
+    .review-header {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 16px;
+    }
+
+    .review-header img {
+        width: 58px;
+        height: 58px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    .review-header strong {
+        display: block;
+    }
+
+    .review-date {
+        display: inline-block;
+        margin-top: 16px;
+        color: #a1826b;
+        font-size: 0.9rem;
+    }
+
+    @media (max-width: 992px) {
+        .hero-shell,
+        .category-grid,
+        .feature-grid,
+        .offer-grid,
+        .recommend-grid,
+        .review-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .hero-copy {
+            padding: 34px 26px;
+        }
+
+        .hero-stats {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+{% block content %}
+<section class="hero">
+    <div class="hero-wrap hero-shell">
+        <div class="hero-copy">
+            <span class="eyebrow"><i class="fas fa-bolt"></i> Restaurant-style delivery</span>
+            <h1>Hot meals, cold drinks, zero waiting drama.</h1>
+            <p>FoodZone Kitchen now feels like a modern restaurant app: fast ordering, bold menu browsing, cleaner visuals, and a checkout flow built for hungry users who want decisions to feel instant.</p>
+            <div class="hero-actions">
+                <a href="{% url 'product' %}" class="cta-btn">Explore Menu</a>
+                <a href="{% url 'cart' %}" class="ghost-btn">View Cart</a>
+            </div>
+            <div class="hero-stats">
+                <div class="stat-chip">
+                    <strong>30 min</strong>
+                    <span>Average delivery window</span>
+                </div>
+                <div class="stat-chip">
+                    <strong>Fresh Daily</strong>
+                    <span>Prepared and packed every morning</span>
+                </div>
+                <div class="stat-chip">
+                    <strong>Live Orders</strong>
+                    <span>Track placed orders from your account</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="hero-visual">
+            <div class="visual-card">
+                <strong>Tonight's comfort spread</strong>
+                <p class="mb-0">Bowls, salads, juices and quick plates styled more like a delivery menu than a farm catalogue.</p>
+                <div class="visual-badges">
+                    <span>Top rated</span>
+                    <span>Fresh ingredients</span>
+                    <span>Fast checkout</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="section-wrap">
+        <div class="section-heading">
+            <div>
+                <span class="eyebrow">Menu zones</span>
+                <h2>Browse like a real food app</h2>
+            </div>
+            <p>Instead of a generic products grid, the homepage now pushes users toward clear menu-style categories and fast discovery.</p>
+        </div>
+
+        <div class="category-grid">
+            <a href="{% url 'product' %}?category=Fast+Food" class="section-card category-card">
+                <img src="/static/img/cocacola.jpg" alt="Fast drinks">
+                <div class="body">
+                    <h3>Fast Food</h3>
+                    <p>Primary restaurant menu category for quick bites, combos and everyday order-heavy items.</p>
+                </div>
+            </a>
+            <a href="{% url 'product' %}?category=Desserts" class="section-card category-card">
+                <img src="/static/img/coffee.jpg" alt="Hot beverages">
+                <div class="body">
+                    <h3>Desserts</h3>
+                    <p>Sweet menu section for items users usually browse after mains, not fruit-category shopping.</p>
+                </div>
+            </a>
+            <a href="{% url 'product' %}?category=Beverages" class="section-card category-card">
+                <img src="/static/img/orange-juice.jpg" alt="Cold beverages">
+                <div class="body">
+                    <h3>Beverages</h3>
+                    <p>Cold drinks and sip-ready add-ons grouped under a proper restaurant-style beverages section.</p>
+                </div>
+            </a>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="section-wrap">
+        <div class="section-heading">
+            <div>
+                <span class="eyebrow">Why it feels better</span>
+                <h2>Restaurant UI, not a brochure</h2>
+            </div>
+            <p>The new direction focuses on order intent: what to eat, what to add, and how fast it gets to the customer.</p>
+        </div>
+
+        <div class="feature-grid">
+            <div class="section-card feature-card">
+                <div class="icon"><i class="fas fa-fire"></i></div>
+                <h3>Food-first visuals</h3>
+                <p>Big photography, stronger contrast and shorter copy keep the interface closer to a delivery brand.</p>
+            </div>
+            <div class="section-card feature-card">
+                <div class="icon"><i class="fas fa-layer-group"></i></div>
+                <h3>Cleaner menu browsing</h3>
+                <p>Categories and cards are easier to scan, which makes the ordering flow feel much faster.</p>
+            </div>
+            <div class="section-card feature-card">
+                <div class="icon"><i class="fas fa-motorcycle"></i></div>
+                <h3>Delivery-ready journey</h3>
+                <p>The customer now moves through menu, cart, checkout and order success in one consistent style.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="section-wrap">
+        <div class="section-heading">
+            <div>
+                <span class="eyebrow">For you</span>
+                <h2>Recommended for you</h2>
+            </div>
+            <p>Personalized suggestions based on what you ordered before and what you are browsing right now.</p>
+        </div>
+
+        <div class="recommend-grid">
+            {% for product in recommended_products %}
+                <a href="{% url 'View_Detail' product.id %}" class="section-card recommend-card">
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                    <div class="body">
+                        <h3>{{ product.name }}</h3>
+                        <p>
+                            {% if product.description %}
+                                {{ product.description|truncatechars:90 }}
+                            {% else %}
+                                A smart recommendation picked from your ordering patterns and current menu interest.
+                            {% endif %}
+                        </p>
+                        <div class="recommend-meta">
+                            <strong>₹{{ product.discounted_price }}</strong>
+                            <span class="eyebrow" style="padding:8px 12px; font-size:0.72rem;">{{ product.unit }}</span>
+                        </div>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="section-wrap">
+        <div class="section-heading">
+            <div>
+                <span class="eyebrow">Popular picks</span>
+                <h2>Featured order combinations</h2>
+            </div>
+            <p>These blocks make the homepage feel like a curated menu rather than a generic company landing page.</p>
+        </div>
+
+        <div class="offer-grid">
+            <div class="section-card offer-card">
+                <span class="offer-badge">Chef combo</span>
+                <img src="static/img/combo.png" alt="Drink combo">
+                <div class="body">
+                    <h3>Burger Combo Style Drink Set</h3>
+                    <p>Using the strongest non-organic local asset so the homepage stops reading like a farm brochure.</p>
+                </div>
+            </div>
+            <div class="section-card offer-card">
+                <span class="offer-badge">Quick favorite</span>
+                <img src="/static/img/combo2.png" alt="Coffee order">
+                <div class="body">
+                    <h3>Sandwitch Combo</h3>
+                    <p>A perfect combo of a tasty sandwich served with sides and a refreshing drink for a complete meal experience.</p>
+                </div>
+            </div>
+            <div class="section-card offer-card">
+                <span class="offer-badge">Refreshing</span>
+                <img src="static/img/fix punjabi.png" alt="Cold drinks">
+                <div class="body">
+                    <h3>Classic Punjabi Plate</h3>
+                    <p>A wholesome Punjabi meal with rich curries, fresh roti, rice, and traditional flavors.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="section-wrap">
+        <div class="cta-banner">
+            <div class="section-heading mb-0">
+                <div>
+                    <span class="eyebrow" style="background: rgba(255,255,255,0.14); color: #fff;">Fast lane</span>
+                    <h2 style="color: #fff;">Ready to test the new restaurant flow?</h2>
+                </div>
+                <div>
+                    <a href="{% url 'product' %}" class="cta-btn">Open Menu</a>
+                </div>
+            </div>
+            <p class="mb-0 mt-2">This section replaces the old “firm visit” style block with something that actually supports food ordering behavior.</p>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="section-wrap">
+        <div class="section-heading">
+            <div>
+                <span class="eyebrow">Guest feedback</span>
+                <h2>What customers are saying</h2>
+            </div>
+            <p>Reviews now sit inside cards that match the rest of the restaurant-like UI rather than a carousel-heavy marketing layout.</p>
+        </div>
+
+        <div class="review-grid">
+            <div class="review-card">
+                <div class="review-header">
+                    <img src="/static/img/testimonial-1.jpg" alt="Priya Mehta">
+                    <div>
+                        <strong>Priya Mehta</strong>
+                        <span>Marketing Executive, Ahmedabad</span>
+                    </div>
+                </div>
+                <p>“I ordered a Punjabi thali for lunch and the taste was honestly amazing. The app looks cleaner now, checkout was quick, and the packaging kept everything fresh.”</p>
+                <span class="review-date">Mar 28, 2026</span>
+            </div>
+
+            <div class="review-card">
+                <div class="review-header">
+                    <img src="/static/img/testimonial-3.jpg" alt="Rohan Patel">
+                    <div>
+                        <strong>Rohan Patel</strong>
+                        <span>College Student, Vadodara</span>
+                    </div>
+                </div>
+                <p>“The South Indian section is really nice now. I ordered dosa and coffee, and both arrived on time. The whole ordering experience feels much more modern.”</p>
+                <span class="review-date">Mar 29, 2026</span>
+            </div>
+
+            {% for r in reviews %}
+                {% if r.client_name != "Kajal Radix" and r.client_name != "Rahul Verma" %}
+                    <div class="review-card">
+                        <div class="review-header">
+                            <img src="{{ r.image.url }}" alt="{{ r.client_name }}">
+                            <div>
+                                <strong>{{ r.client_name }}</strong>
+                                <span>{{ r.profession }}</span>
+                            </div>
+                        </div>
+                        <p>“{{ r.review }}”</p>
+                        <span class="review-date">{{ r.created_at|date:"M d, Y" }}</span>
+                    </div>
+                {% endif %}
+            {% empty %}
+                <div class="review-card">
+                    <div class="review-header">
+                        <img src="/static/img/testimonial-4.jpg" alt="Guest">
+                        <div>
+                            <strong>Neha Joshi</strong>
+                            <span>Content Writer, Surat</span>
+                        </div>
+                    </div>
+                    <p>“I liked how easy it was to find desserts and beverages together. The app feels simple, quick, and much better for everyday ordering.”</p>
+                    <span class="review-date">Mar 27, 2026</span>
+                </div>
+            {% endfor %}
+
+            <div class="review-card">
+                <div class="review-header">
+                    <img src="/static/img/testimonial-2.jpg" alt="Aarav Sharma">
+                    <div>
+                        <strong>Aarav Sharma</strong>
+                        <span>Software Engineer, Ahmedabad</span>
+                    </div>
+                </div>
+                <p>“The app feels super smooth now. I ordered Punjabi food and cold coffee for dinner, and everything arrived fresh, hot, and right on time. The menu is much easier to browse than before.”</p>
+                <span class="review-date">Mar 30, 2026</span>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

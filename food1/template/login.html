@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        :root {
+            --bg: radial-gradient(circle at top right, rgba(255, 178, 77, 0.24), transparent 30%), linear-gradient(135deg, #fff6ed 0%, #fffdf8 100%);
+            --card: #ffffff;
+            --primary: #e66a2f;
+            --primary-dark: #c24f1a;
+            --text: #6b594d;
+            --muted: #897f75;
+            --border: #ede5dd;
+            --danger: #c53b27;
+            --shadow: 0 24px 48px rgba(113, 54, 28, 0.1);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "Poppins", sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            display: grid;
+            place-items: center;
+            padding: 24px;
+        }
+
+        .login-card {
+            width: min(900px, 100%);
+            display: grid;
+            grid-template-columns: 0.95fr 1.05fr;
+            border-radius: 28px;
+            overflow: hidden;
+            background: var(--card);
+            box-shadow: var(--shadow);
+        }
+
+        .visual {
+            background: linear-gradient(160deg, #8b5c3d, #d75a28);
+            color: #fff;
+            padding: 48px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .visual h1 {
+            margin: 0 0 16px;
+            font-size: clamp(2rem, 4vw, 3rem);
+            line-height: 1.08;
+        }
+
+        .visual p {
+            margin: 0;
+            line-height: 1.7;
+            color: rgba(255, 255, 255, 0.86);
+        }
+
+        .visual .note {
+            margin-top: 24px;
+            padding: 14px 16px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+        }
+
+        .form-wrap {
+            padding: 42px;
+        }
+
+        .form-wrap h2 {
+            margin: 0 0 8px;
+            font-size: 2rem;
+        }
+
+        .subtext {
+            margin: 0 0 26px;
+            color: var(--muted);
+        }
+
+        form {
+            display: grid;
+            gap: 16px;
+        }
+
+        .input-group {
+            display: grid;
+            gap: 8px;
+        }
+
+        label {
+            font-weight: 600;
+            font-size: 0.92rem;
+        }
+
+        input {
+            width: 100%;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 14px 16px;
+            font-size: 1rem;
+            outline: none;
+            background: #fbfdf7;
+        }
+
+        input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(230, 106, 47, 0.12);
+        }
+
+        .status {
+            display: none;
+            margin-bottom: 18px;
+            padding: 12px 14px;
+            border-radius: 14px;
+            font-size: 0.95rem;
+        }
+
+        .status.show { display: block; }
+        .status.error {
+            background: #fff0ed;
+            color: var(--danger);
+            border: 1px solid #f5c2ba;
+        }
+        .status.success {
+            background: #fef5f0;
+            color: var(--primary-dark);
+            border: 1px solid #f5d5c8;
+        }
+
+        button {
+            border: 0;
+            border-radius: 16px;
+            padding: 15px 18px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            color: #fff;
+            background: linear-gradient(135deg, #e66a2f, #f08844);
+            box-shadow: 0 14px 24px rgba(230, 106, 47, 0.2);
+        }
+
+        button:disabled {
+            opacity: 0.7;
+            cursor: wait;
+        }
+
+        .links {
+            margin-top: 18px;
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .links a {
+            color: var(--primary-dark);
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        @media (max-width: 820px) {
+            .login-card {
+                grid-template-columns: 1fr;
+            }
+
+            .visual, .form-wrap {
+                padding: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section class="login-card">
+        <div class="visual">
+            <h1>Pick up where your food flow left off.</h1>
+            <p>Customers land on the home page after login. Approved delivery partners go straight to their dashboard.</p>
+            <div class="note">Delivery partner accounts stay locked until an admin marks them approved in the backend.</div>
+        </div>
+
+        <div class="form-wrap">
+            <h2>Welcome back</h2>
+            <p class="subtext">Use the same email and password you registered with.</p>
+
+            <div id="statusBox" class="status" aria-live="polite"></div>
+
+            <form id="loginForm" novalidate>
+                {% csrf_token %}
+                <div class="input-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="name@example.com" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                </div>
+
+                <button type="submit" id="loginBtn">Log in</button>
+            </form>
+
+            <div class="links">
+                <a href="{% url 'forgot_password' %}">Forgot password?</a>
+                <a href="{% url 'signup' %}">Create account</a>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        const loginForm = document.getElementById('loginForm');
+        const loginBtn = document.getElementById('loginBtn');
+        const statusBox = document.getElementById('statusBox');
+
+        function showStatus(message, type) {
+            statusBox.textContent = message;
+            statusBox.className = `status show ${type}`;
+        }
+
+        loginForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const payload = Object.fromEntries(new FormData(loginForm).entries());
+
+            if (!payload.email || !payload.password) {
+                showStatus('Email and password are required.', 'error');
+                return;
+            }
+
+            loginBtn.disabled = true;
+            showStatus('Checking your account...', 'success');
+
+            try {
+                const csrfToken = loginForm.querySelector('input[name="csrfmiddlewaretoken"]').value;
+                const requestBody = new URLSearchParams();
+                Object.entries(payload).forEach(([key, value]) => {
+                    requestBody.append(key, value ?? '');
+                });
+
+                const response = await fetch("/api/auth/login/", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                        'X-CSRFToken': csrfToken,
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    credentials: 'same-origin',
+                    body: requestBody.toString()
+                });
+
+                const rawText = await response.text();
+                let result;
+
+                try {
+                    result = JSON.parse(rawText);
+                } catch (parseError) {
+                    result = {
+                        success: false,
+                        message: rawText.includes('CSRF')
+                            ? 'CSRF validation failed. Refresh the page and try again.'
+                            : `Login request failed with status ${response.status}.`
+                    };
+                }
+
+                showStatus(result.message || 'Login request failed.', response.ok && result.success ? 'success' : 'error');
+
+                if (response.ok && result.success && result.redirect_url) {
+                    setTimeout(() => {
+                        window.location.href = result.redirect_url;
+                    }, 700);
+                }
+            } catch (error) {
+                showStatus('Unable to connect to the login service right now.', 'error');
+            } finally {
+                loginBtn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

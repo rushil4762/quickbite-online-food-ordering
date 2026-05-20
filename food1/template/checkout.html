@@ -1,0 +1,258 @@
+{% extends "base.html" %}
+{% load custom_tags %}
+{% block head %}
+<style>
+    .checkout-shell {
+        width: min(1180px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 30px 0 40px;
+    }
+
+    .checkout-head h1 {
+        font-family: "Fraunces", serif;
+        font-size: clamp(2.2rem, 4vw, 3.4rem);
+        margin-bottom: 10px;
+    }
+
+    .checkout-grid {
+        display: grid;
+        grid-template-columns: 0.9fr 1.1fr;
+        gap: 24px;
+        margin-top: 22px;
+    }
+
+    .panel {
+        padding: 26px;
+        border-radius: 28px;
+        background: rgba(255, 253, 248, 0.92);
+        border: 1px solid rgba(74, 40, 21, 0.08);
+        box-shadow: 0 22px 48px rgba(113, 54, 28, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    }
+
+    .order-line {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 14px 0;
+        border-bottom: 1px solid rgba(74, 40, 21, 0.08);
+    }
+
+    .order-line:last-child {
+        border-bottom: 0;
+    }
+
+    .summary-total {
+        margin-top: 12px;
+        padding-top: 12px;
+        border-top: 1px solid rgba(74, 40, 21, 0.08);
+        font-size: 1.08rem;
+        font-weight: 800;
+    }
+
+    .form-grid {
+        display: grid;
+        gap: 16px;
+    }
+
+    .field-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 800;
+    }
+
+    input,
+    select {
+        width: 100%;
+        padding: 14px 16px;
+        border-radius: 16px;
+        border: 1px solid rgba(74, 40, 21, 0.12);
+        background: #fff;
+        outline: none;
+    }
+
+    .payment-box {
+        margin-top: 10px;
+        padding: 18px;
+        border-radius: 20px;
+        background: #fff5e8;
+        border: 1px dashed rgba(74, 40, 21, 0.18);
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .payment-box img {
+        max-width: 100%;
+        border-radius: 16px;
+        margin-top: 10px;
+    }
+
+    .empty-card {
+        text-align: center;
+        padding: 52px 28px;
+        border-radius: 28px;
+        background: rgba(255, 253, 248, 0.92);
+        border: 1px solid rgba(74, 40, 21, 0.08);
+    }
+
+    .panel:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 28px 54px rgba(113, 54, 28, 0.14);
+        border-color: rgba(230, 90, 47, 0.14);
+    }
+
+    .payment-box:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 16px 28px rgba(113, 54, 28, 0.1);
+    }
+
+    @media (max-width: 900px) {
+        .checkout-grid,
+        .field-row {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+{% block content %}
+<section class="checkout-shell">
+    <div class="checkout-head">
+        <h1>Checkout in one clean step</h1>
+        <p class="text-muted mb-0">This page now feels more like a delivery app checkout than a plain form and table.</p>
+    </div>
+
+    {% if cart_items %}
+        <div class="checkout-grid">
+            <div class="panel">
+                <h3 class="mb-4">Order summary</h3>
+                {% for item in cart_items %}
+                    <div class="order-line">
+                        <div>
+                            <strong>{{ item.product_name }}</strong><br>
+                            <span class="text-muted">{{ item.quantity|format_quantity }} {{ item.unit }} x ₹{{ item.price_at_time }}</span>
+                        </div>
+                        <strong>₹{{ item.total_price }}</strong>
+                    </div>
+                {% endfor %}
+
+                <div class="order-line mt-3">
+                    <span>Subtotal</span>
+                    <strong>₹{{ total_price }}</strong>
+                </div>
+                <div class="order-line">
+                    <span>Delivery</span>
+                    <strong>₹50</strong>
+                </div>
+                <div class="summary-total d-flex justify-content-between">
+                    <span>Grand Total</span>
+                    <strong>₹{{ grand_total }}</strong>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h3 class="mb-4">Delivery details & payment</h3>
+                <form method="POST" action="{% url 'place_order' %}" class="form-grid">
+                    {% csrf_token %}
+
+                    <div class="field-row">
+                        <div>
+                            <label>Flat / House No.</label>
+                            <input type="text" name="flat" placeholder="Apartment 204" required>
+                        </div>
+                        <div>
+                            <label>Street / Road</label>
+                            <input type="text" name="street" placeholder="Main road, landmark" required>
+                        </div>
+                    </div>
+
+                    <div class="field-row">
+                        <div>
+                            <label>City</label>
+                            <input type="text" name="city" placeholder="Ahmedabad" required>
+                        </div>
+                        <div>
+                            <label>Pincode</label>
+                            <input type="text" name="pincode" placeholder="380001" pattern="\d{6}" title="Enter 6-digit pincode" required>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label>Payment Method</label>
+                        <select id="payment_method" name="payment_method">
+                            <option value="COD" selected>Cash on Delivery</option>
+                            <option value="UPI">UPI</option>
+                            <option value="Card">Card</option>
+                        </select>
+                    </div>
+
+                    <div id="payment-details" class="payment-box"></div>
+
+                    <div style="display:flex; gap:12px; flex-wrap:wrap;">
+                        <button type="submit" class="cta-btn">Place Order</button>
+                        <a href="{% url 'cart' %}" class="ghost-btn">Back to Cart</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    {% else %}
+        <div class="empty-card">
+            <h3>Your cart is empty</h3>
+            <p class="text-muted">Add items to the bag before checking out.</p>
+            <a href="{% url 'product' %}" class="cta-btn">Open Menu</a>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}
+{% block script %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const paymentMethod = document.getElementById("payment_method");
+        const paymentDetails = document.getElementById("payment-details");
+        if (!paymentMethod || !paymentDetails) return;
+
+        function updatePaymentDetails() {
+            const method = paymentMethod.value;
+
+            if (method === "COD") {
+                paymentDetails.innerHTML = '<div>You will pay in cash when the delivery partner reaches your address.</div>';
+            } else if (method === "UPI") {
+                paymentDetails.innerHTML = `
+                    <div>Scan the QR code below to pay through UPI.</div>
+                    <img src="/media/Scanner/scan.jpg" alt="UPI Scanner">
+                `;
+            } else if (method === "Card") {
+                paymentDetails.innerHTML = `
+                    <div class="field-row">
+                        <div>
+                            <label>Card Holder Name</label>
+                            <input type="text" name="card_name" placeholder="Name on card" required>
+                        </div>
+                        <div>
+                            <label>Card Number</label>
+                            <input type="text" name="card_number" placeholder="1234567812345678" maxlength="16" pattern="\\d{16}" required>
+                        </div>
+                    </div>
+                    <div class="field-row" style="margin-top:16px;">
+                        <div>
+                            <label>Expiry</label>
+                            <input type="text" name="expiry" placeholder="MM-YY" pattern="^(0[1-9]|1[0-2])-(\\d{2})$" required>
+                        </div>
+                        <div>
+                            <label>CVV</label>
+                            <input type="text" name="cvv" placeholder="123" maxlength="3" pattern="\\d{3}" required>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        paymentMethod.addEventListener("change", updatePaymentDetails);
+        updatePaymentDetails();
+    });
+</script>
+{% endblock %}

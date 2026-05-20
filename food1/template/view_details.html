@@ -1,0 +1,350 @@
+{% extends "base.html" %}
+{% load custom_tags %}
+{% block head %}
+<style>
+    .detail-shell {
+        width: min(1180px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 34px 0 40px;
+    }
+
+    .detail-grid {
+        display: grid;
+        grid-template-columns: 1fr 0.95fr;
+        gap: 28px;
+        align-items: start;
+    }
+
+    .detail-media,
+    .detail-panel {
+        border-radius: 30px;
+        background: rgba(255, 253, 248, 0.92);
+        border: 1px solid rgba(74, 40, 21, 0.08);
+        box-shadow: 0 24px 48px rgba(113, 54, 28, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    }
+
+    .detail-media {
+        overflow: hidden;
+    }
+
+    .detail-media img {
+        width: 100%;
+        height: 100%;
+        min-height: 540px;
+        object-fit: cover;
+        transition: transform 0.4s ease;
+    }
+
+    .detail-panel {
+        padding: 34px;
+    }
+
+    .detail-panel h1 {
+        font-family: "Fraunces", serif;
+        font-size: clamp(2.2rem, 4vw, 3.6rem);
+        margin: 14px 0 12px;
+    }
+
+    .tag-row {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .tag-row span {
+        padding: 10px 14px;
+        border-radius: 999px;
+        background: #fff2e2;
+        color: #6f5a4b;
+        font-size: 0.85rem;
+        font-weight: 800;
+    }
+
+    .price-box {
+        margin: 22px 0;
+        padding: 20px 22px;
+        border-radius: 22px;
+        background: linear-gradient(135deg, #fff3e7, #fff9f3);
+        border: 1px solid rgba(74, 40, 21, 0.08);
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .detail-media:hover,
+    .detail-panel:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 30px 56px rgba(113, 54, 28, 0.15);
+        border-color: rgba(230, 90, 47, 0.14);
+    }
+
+    .detail-media:hover img {
+        transform: scale(1.04);
+    }
+
+    .price-box:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 18px 30px rgba(113, 54, 28, 0.1);
+    }
+
+    .price-box strong {
+        font-size: 2rem;
+        color: #24160f;
+    }
+
+    .price-box del {
+        color: #9c8371;
+        margin-right: 10px;
+    }
+
+    .detail-copy {
+        color: #6c5a4d;
+        line-height: 1.8;
+    }
+
+    .order-form {
+        margin-top: 24px;
+        display: grid;
+        gap: 14px;
+    }
+
+    .quantity-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .order-form input[type="number"] {
+        width: 180px;
+        padding: 13px 14px;
+        border-radius: 14px;
+        border: 1px solid rgba(74, 40, 21, 0.12);
+        background: #fff;
+    }
+
+    .unit-pill {
+        display: inline-flex;
+        align-items: center;
+        padding: 11px 14px;
+        border-radius: 999px;
+        background: #fff2e2;
+        color: #6f5a4b;
+        font-weight: 800;
+    }
+
+    .inline-note {
+        color: #6c5a4d;
+    }
+
+    .message-list {
+        display: grid;
+        gap: 10px;
+        margin: 18px 0 0;
+    }
+
+    .message-item {
+        padding: 12px 14px;
+        border-radius: 16px;
+        font-weight: 700;
+        background: #fff4ea;
+        color: #a34522;
+        border: 1px solid rgba(230, 90, 47, 0.16);
+    }
+
+    .stock-out {
+        margin-top: 24px;
+        color: #b03c19;
+        font-weight: 800;
+    }
+
+    .related-section {
+        margin-top: 34px;
+    }
+
+    .related-head h2 {
+        font-family: "Fraunces", serif;
+        font-size: clamp(1.8rem, 3vw, 2.6rem);
+        margin-bottom: 10px;
+    }
+
+    .related-head p {
+        color: #6c5a4d;
+        margin-bottom: 20px;
+    }
+
+    .related-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 22px;
+    }
+
+    .related-card {
+        display: block;
+        overflow: hidden;
+        border-radius: 26px;
+        background: rgba(255, 253, 248, 0.92);
+        border: 1px solid rgba(74, 40, 21, 0.08);
+        box-shadow: 0 22px 48px rgba(113, 54, 28, 0.1);
+    }
+
+    .related-card img {
+        width: 100%;
+        height: 220px;
+        object-fit: cover;
+    }
+
+    .related-card .body {
+        padding: 22px;
+    }
+
+    .related-card h3 {
+        margin: 0 0 8px;
+        font-size: 1.25rem;
+    }
+
+    .related-card p {
+        color: #6c5a4d;
+        line-height: 1.7;
+        margin-bottom: 14px;
+    }
+
+    @media (max-width: 900px) {
+        .detail-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .detail-media img {
+            min-height: 320px;
+        }
+
+        .related-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+{% block content %}
+<section class="detail-shell">
+    <div class="detail-grid">
+        <div class="detail-media">
+            <img src="{{ product.image.url }}" alt="{{ product.name }}">
+        </div>
+
+        <div class="detail-panel">
+            <div class="tag-row">
+                <span>{{ product.category }}</span>
+                <span><i class="fas fa-clock"></i> 20-30 min</span>
+                <span><i class="fas fa-star"></i> {{ product.id|product_rating }} rating</span>
+            </div>
+
+            <h1>{{ product.name }}</h1>
+            <p class="detail-copy">
+                {% if product.description %}
+                    {{ product.description }}
+                {% else %}
+                    Styled like a featured quick-order dish card with cleaner spacing, stronger pricing emphasis and less organic-store feel.
+                {% endif %}
+            </p>
+
+            <div class="price-box">
+                {% if product.discount_percent > 0 %}
+                    <div><del>₹{{ product.price }} / {{ product.unit }}</del><strong>₹{{ product.discounted_price }} / {{ product.unit }}</strong></div>
+                    <div class="inline-note">{{ product.discount_percent }}% offer applied</div>
+                {% else %}
+                    <div><strong>₹{{ product.price }} / {{ product.unit }}</strong></div>
+                    <div class="inline-note">Freshly packed and sent to your doorstep</div>
+                {% endif %}
+            </div>
+
+            <p class="inline-note"><strong>Status:</strong> {% if product.is_available %}Available{% else %}Out of Stock{% endif %}</p>
+            <p class="inline-note"><strong>Unit:</strong> {{ product.unit }}{% if product.unit == "kg" %} | Minimum {{ product.min_quantity|format_quantity }} {{ product.unit }}{% endif %}</p>
+            {% if product.storage_instructions %}
+                <p class="inline-note"><strong>Chef note:</strong> {{ product.storage_instructions }}</p>
+            {% endif %}
+
+            {% if messages %}
+                <div class="message-list">
+                    {% for message in messages %}
+                        <div class="message-item">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% if product.is_available %}
+                <form method="post" action="{% url 'add_cart_redirect' product.id %}" class="order-form">
+                    {% csrf_token %}
+                    <label for="quantity"><strong>Select quantity</strong></label>
+                    <div class="quantity-row">
+                        {% if product.unit == "kg" %}
+                            <input type="number" name="quantity" id="quantity" step="0.1" min="{{ product.min_quantity|format_quantity }}" value="{{ product.min_quantity|format_quantity }}" required>
+                        {% else %}
+                            <input type="number" name="quantity" id="quantity" step="1" min="1" value="1" required>
+                        {% endif %}
+                        <span class="unit-pill">{{ product.unit }}</span>
+                    </div>
+
+                    <p id="total-price" class="inline-note"><strong>Total:</strong> ₹{{ product.discounted_price }}</p>
+
+                    <div style="display:flex; gap:12px; flex-wrap:wrap;">
+                        <button type="submit" class="cta-btn">Add to Cart</button>
+                        <a href="{% url 'product' %}" class="ghost-btn">Back to Menu</a>
+                    </div>
+                </form>
+            {% else %}
+                <div class="stock-out">This dish is currently sold out.</div>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if view_based_products %}
+        <div class="related-section">
+            <div class="related-head">
+                <h2>Because you viewed this</h2>
+                <p>These suggestions are based on the dish you are currently viewing and the products you recently explored.</p>
+            </div>
+
+            <div class="related-grid">
+                {% for related_product in view_based_products %}
+                    <a href="{% url 'View_Detail' related_product.id %}" class="related-card">
+                        <img src="{{ related_product.image.url }}" alt="{{ related_product.name }}">
+                        <div class="body">
+                            <h3>{{ related_product.name }}</h3>
+                            <p>
+                                {% if related_product.description %}
+                                    {{ related_product.description|truncatechars:95 }}
+                                {% else %}
+                                    Similar menu suggestion based on your recent browsing activity and category preference.
+                                {% endif %}
+                            </p>
+                            <strong>₹{{ related_product.discounted_price }} / {{ related_product.unit }}</strong>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}
+{% block script %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const quantityField = document.getElementById("quantity");
+        const totalPrice = document.getElementById("total-price");
+        if (!quantityField || !totalPrice) return;
+
+        const pricePerUnit = Number("{{ product.discounted_price }}");
+
+        function updateTotal() {
+            const qty = Number(quantityField.value);
+            if (!qty || qty <= 0) return;
+            totalPrice.innerHTML = "<strong>Total:</strong> ₹" + (pricePerUnit * qty).toFixed(2);
+        }
+
+        quantityField.addEventListener("change", function () {
+            updateTotal();
+        });
+
+        updateTotal();
+    });
+</script>
+{% endblock %}

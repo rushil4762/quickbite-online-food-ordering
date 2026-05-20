@@ -1,0 +1,421 @@
+{% extends "base.html" %}
+{% block head %}
+<style>
+    .contact-shell {
+        width: min(1180px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 34px 0 20px;
+    }
+
+    .contact-banner,
+    .contact-panel,
+    .contact-info-card,
+    .support-card,
+    .map-panel {
+        border-radius: 30px;
+        border: 1px solid rgba(74, 40, 21, 0.08);
+        box-shadow: 0 24px 48px rgba(113, 54, 28, 0.1);
+    }
+
+    .contact-banner {
+        padding: 38px 40px;
+        background:
+            radial-gradient(circle at top right, rgba(255, 178, 77, 0.22), transparent 26%),
+            linear-gradient(135deg, #fff8f1 0%, #fffdf8 100%);
+    }
+
+    .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 16px;
+        border-radius: 999px;
+        background: rgba(230, 90, 47, 0.08);
+        color: #a34522;
+        font-weight: 800;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        font-size: 0.78rem;
+    }
+
+    .contact-banner h1,
+    .section-heading h2 {
+        margin: 0;
+        font-family: "Fraunces", serif;
+        line-height: 1.02;
+        letter-spacing: -0.03em;
+    }
+
+    .contact-banner-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
+        gap: 24px;
+        flex-wrap: wrap;
+    }
+
+    .contact-banner h1 {
+        margin-top: 16px;
+        font-size: clamp(2.5rem, 4.5vw, 4.6rem);
+        max-width: 11ch;
+    }
+
+    .contact-lead {
+        max-width: 56ch;
+        color: #6d584b;
+        line-height: 1.85;
+        font-size: 1.04rem;
+    }
+
+    .section {
+        padding: 34px 0;
+    }
+
+    .section-heading {
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
+        gap: 18px;
+        margin-bottom: 22px;
+        flex-wrap: wrap;
+    }
+
+    .section-heading h2 {
+        font-size: clamp(2rem, 4vw, 3rem);
+    }
+
+    .section-heading p {
+        max-width: 58ch;
+        margin: 0;
+        color: #6d584b;
+    }
+
+    .contact-panel {
+        overflow: hidden;
+        display: grid;
+        grid-template-columns: 0.88fr 1.12fr;
+        background: rgba(255, 253, 248, 0.92);
+    }
+
+    .contact-info-card {
+        height: 100%;
+        padding: 34px;
+        color: #fff;
+        background:
+            radial-gradient(circle at top right, rgba(255, 178, 77, 0.28), transparent 22%),
+            linear-gradient(135deg, #30170f 0%, #6f2b18 58%, #d65427 100%);
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    .contact-info-card h3,
+    .support-card h3 {
+        color: #fff;
+        margin: 0 0 12px;
+        font-size: 1.45rem;
+    }
+
+    .contact-info-card p,
+    .support-card p {
+        line-height: 1.8;
+    }
+
+    .contact-info-card p {
+        color: rgba(255, 245, 237, 0.82);
+    }
+
+    .contact-list {
+        display: grid;
+        gap: 22px;
+        margin-top: 28px;
+    }
+
+    .contact-row {
+        display: flex;
+        gap: 14px;
+        align-items: flex-start;
+    }
+
+    .contact-row i,
+    .support-icon {
+        width: 46px;
+        height: 46px;
+        border-radius: 16px;
+        display: grid;
+        place-items: center;
+        background: rgba(255, 255, 255, 0.14);
+        color: #fff;
+        font-size: 1.05rem;
+        flex-shrink: 0;
+    }
+
+    .contact-row strong {
+        display: block;
+        margin-bottom: 4px;
+        color: #fff;
+    }
+
+    .contact-row span {
+        color: rgba(255, 245, 237, 0.82);
+    }
+
+    .contact-form-wrap {
+        padding: 34px;
+    }
+
+    .success-banner {
+        margin-bottom: 20px;
+        padding: 14px 16px;
+        border-radius: 18px;
+        background: #eef9e9;
+        border: 1px solid rgba(51, 92, 56, 0.16);
+        color: #335c38;
+        font-weight: 700;
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+    }
+
+    .field,
+    .field-full {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .field-full {
+        grid-column: 1 / -1;
+    }
+
+    .field label,
+    .field-full label {
+        font-weight: 700;
+        color: #4c392e;
+    }
+
+    .field input,
+    .field-full input,
+    .field-full textarea {
+        width: 100%;
+        border: 1px solid rgba(74, 40, 21, 0.12);
+        border-radius: 18px;
+        background: #fff;
+        color: #24160f;
+        padding: 15px 16px;
+        outline: none;
+        transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+    }
+
+    .field-full textarea {
+        min-height: 180px;
+        resize: vertical;
+    }
+
+    .field input:focus,
+    .field-full input:focus,
+    .field-full textarea:focus {
+        border-color: rgba(230, 90, 47, 0.34);
+        box-shadow: 0 0 0 4px rgba(230, 90, 47, 0.08);
+    }
+
+    .submit-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 20px;
+        border: 0;
+        border-radius: 999px;
+        padding: 14px 22px;
+        color: #fff;
+        font-weight: 800;
+        background: linear-gradient(135deg, #e65a2f, #ff974e);
+        box-shadow: 0 14px 24px rgba(230, 90, 47, 0.22);
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 18px 30px rgba(230, 90, 47, 0.28);
+    }
+
+    .support-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 22px;
+    }
+
+    .support-card {
+        padding: 26px;
+        background: rgba(255, 253, 248, 0.92);
+    }
+
+    .support-icon {
+        margin-bottom: 18px;
+        background: linear-gradient(135deg, #e65a2f, #ff994f);
+    }
+
+    .support-card p {
+        margin: 0;
+        color: #6d584b;
+    }
+
+    .map-panel {
+        overflow: hidden;
+        background: rgba(255, 253, 248, 0.92);
+    }
+
+    .map-panel iframe {
+        width: 100%;
+        height: 420px;
+        border: 0;
+        display: block;
+    }
+
+    .contact-banner:hover,
+    .contact-panel:hover,
+    .support-card:hover,
+    .map-panel:hover {
+        transform: translateY(-5px);
+        transition: transform 0.28s ease, box-shadow 0.28s ease;
+        box-shadow: 0 30px 56px rgba(113, 54, 28, 0.16);
+    }
+
+    @media (max-width: 992px) {
+        .contact-panel,
+        .support-grid,
+        .form-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .contact-banner {
+            padding: 30px 24px;
+        }
+    }
+</style>
+{% endblock %}
+{% block content %}
+
+
+<section class="section">
+    <div class="contact-shell">
+        <div class="section-heading">
+            <div>
+                <span class="eyebrow">Support desk</span>
+                <h2>Reach the team quickly</h2>
+            </div>
+            <p>This layout is now styled like the rest of your ordering system instead of an old generic contact template.</p>
+        </div>
+
+        <div class="contact-panel">
+            <div class="contact-info-card">
+                <h3>We are here for order support, account help, and business queries.</h3>
+                <p>Use the contact form for delivery issues, order feedback, payment concerns, or anything else related to your FoodZone Kitchen experience.</p>
+
+                <div class="contact-list">
+                    <div class="contact-row">
+                        <i class="fas fa-phone-alt"></i>
+                        <div>
+                            <strong>Call Us</strong>
+                            <span>+91 012 345 67890</span>
+                        </div>
+                    </div>
+                    <div class="contact-row">
+                        <i class="fas fa-envelope"></i>
+                        <div>
+                            <strong>Email Us</strong>
+                            <span>foodzone@foodzone.com</span>
+                        </div>
+                    </div>
+                    <div class="contact-row">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <strong>Office Address</strong>
+                            <span>141 Happy-Street, Ahmedabad, India</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="contact-form-wrap">
+                {% if message %}
+                    <div class="success-banner">{{ message }}</div>
+                {% endif %}
+
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="form-grid">
+                        <div class="field">
+                            <label for="name">Your Name</label>
+                            <input type="text" id="name" name="name" placeholder="Enter your full name" pattern="[A-Za-z\s]+" title="Only letters and spaces are allowed in name" required>
+                        </div>
+                        <div class="field">
+                            <label for="email">Your Email</label>
+                            <input type="email" id="email" name="email" placeholder="Enter your Gmail address" pattern="[a-zA-Z0-9._%+-]+@gmail\.com" title="Only @gmail.com email addresses are allowed" required>
+                        </div>
+                        <div class="field-full">
+                            <label for="subject">Subject</label>
+                            <input type="text" id="subject" name="subject" placeholder="What can we help you with?">
+                        </div>
+                        <div class="field-full">
+                            <label for="message">Message</label>
+                            <textarea id="message" name="message" placeholder="Tell us about your order issue, feedback, or question."></textarea>
+                        </div>
+                    </div>
+                    <button class="submit-btn" type="submit">
+                        <i class="fas fa-paper-plane"></i>
+                        <span>Send Message</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="contact-shell">
+        <div class="section-heading">
+            <div>
+                <span class="eyebrow">Help topics</span>
+                <h2>What we can help with</h2>
+            </div>
+            <p>These support categories make the page feel closer to an ordering platform and less like a plain contact form.</p>
+        </div>
+
+        <div class="support-grid">
+            <div class="support-card">
+                <div class="support-icon"><i class="fas fa-motorcycle"></i></div>
+                <h3>Delivery help</h3>
+                <p>Late arrivals, address issues, delivery partner concerns, and updates on active orders.</p>
+            </div>
+            <div class="support-card">
+                <div class="support-icon"><i class="fas fa-credit-card"></i></div>
+                <h3>Payment support</h3>
+                <p>Questions about checkout, online payment attempts, refunds, and billing-related concerns.</p>
+            </div>
+            <div class="support-card">
+                <div class="support-icon"><i class="fas fa-store"></i></div>
+                <h3>Menu and feedback</h3>
+                <p>Suggestions, complaints, dish feedback, and partnership or brand collaboration conversations.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="contact-shell">
+        <div class="map-panel">
+            <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3672.0967104060074!2d72.57136287509208!3d23.021537379170378!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e84f66d5fdbb1%3A0x4a7d53f1d9bcb32f!2sAhmedabad%2C%20Gujarat!5e0!3m2!1sen!2sin!4v1711800000000!5m2!1sen!2sin"
+                allowfullscreen=""
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+                title="FoodZone location map"></iframe>
+        </div>
+    </div>
+</section>
+{% endblock %}

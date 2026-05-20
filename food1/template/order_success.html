@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Success</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Fraunces:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            font-family: "Manrope", sans-serif;
+            color: #24160f;
+            background:
+                radial-gradient(circle at top left, rgba(255, 178, 77, 0.22), transparent 28%),
+                linear-gradient(180deg, #fff8f1 0%, #fff1e4 100%);
+        }
+
+        .success-shell {
+            width: min(760px, calc(100% - 32px));
+            margin: 42px auto;
+            padding: 36px;
+            border-radius: 32px;
+            background: rgba(255, 253, 248, 0.94);
+            border: 1px solid rgba(74, 40, 21, 0.08);
+            box-shadow: 0 24px 56px rgba(113, 54, 28, 0.14);
+        }
+
+        .badge {
+            width: 82px;
+            height: 82px;
+            border-radius: 26px;
+            display: grid;
+            place-items: center;
+            margin-bottom: 18px;
+            color: #fff;
+            font-size: 2rem;
+            background: linear-gradient(135deg, #e65a2f, #ff974e);
+        }
+
+        h1 {
+            font-family: "Fraunces", serif;
+            font-size: clamp(2rem, 4vw, 3.4rem);
+            margin: 0 0 10px;
+        }
+
+        .muted {
+            color: #6c5a4d;
+            line-height: 1.8;
+        }
+
+        .detail-card {
+            margin-top: 24px;
+            padding: 22px;
+            border-radius: 24px;
+            background: #fff5e8;
+            border: 1px solid rgba(74, 40, 21, 0.08);
+        }
+
+        .detail-card p {
+            margin: 10px 0;
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 24px;
+        }
+
+        .cta-btn,
+        .ghost-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 13px 18px;
+            border-radius: 999px;
+            font-weight: 800;
+            text-decoration: none;
+        }
+
+        .cta-btn {
+            color: #fff;
+            background: linear-gradient(135deg, #e65a2f, #ff974e);
+        }
+
+        .ghost-btn {
+            color: #24160f;
+            background: #fff;
+            border: 1px solid rgba(74, 40, 21, 0.12);
+        }
+    </style>
+</head>
+<body>
+    <div class="success-shell">
+        <div class="badge">✓</div>
+        <h1>Order placed successfully</h1>
+        <p class="muted">Your checkout now ends on a proper confirmation card instead of a plain success message. We will redirect you to the homepage in a few seconds.</p>
+
+        <div class="detail-card">
+            <p><strong>Order ID:</strong> #{{ order.id }}</p>
+            <p><strong>Status:</strong> {{ order.status }}</p>
+            <p><strong>Delivery Address:</strong> {{ order.flat }}, {{ order.street }}, {{ order.city }} - {{ order.pincode }}</p>
+            <p><strong>Assigned Delivery Partner:</strong>
+                {% if order.assigned_delivery_partner %}
+                    {{ order.assigned_delivery_partner.profile.name }} ({{ order.assigned_delivery_partner.phone }})
+                {% else %}
+                    We will assign a delivery partner shortly.
+                {% endif %}
+            </p>
+            <p><strong>Payment Method:</strong>
+                {% if payment_method == 'cod' %}
+                    Cash on Delivery
+                {% elif payment_method == 'upi' %}
+                    UPI
+                {% elif payment_method == 'card' %}
+                    Card
+                {% else %}
+                    {{ payment_method }}
+                {% endif %}
+            </p>
+        </div>
+
+        <div class="actions">
+            <a href="{% url 'index' %}" class="cta-btn">Back to Home</a>
+            <a href="{% url 'my_orders' %}" class="ghost-btn">Track My Orders</a>
+        </div>
+    </div>
+
+    <script>
+        setTimeout(function () {
+            window.location.href = "{% url 'index' %}";
+        }, 5000);
+    </script>
+</body>
+</html>
